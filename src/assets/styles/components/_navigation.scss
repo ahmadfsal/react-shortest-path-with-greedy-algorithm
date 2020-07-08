@@ -1,0 +1,9 @@
+.side-nav {
+    height: 100vh;
+    width: $navigation-width;
+    background-color: white;
+    position: fixed;
+    z-index: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
