@@ -1,17 +1,18 @@
 import React, { memo, Fragment } from 'react'
 import { Button, Select, Column, Columns } from '..'
-import { START_FROM, TO_DESTINATION, sanggarList } from '../../constants/index'
+import { START_FROM, TO_DESTINATION } from '../../constants/index'
 
 const SideNavigation = (props) => {
     const {
+        bobot,
+        handleChangeInput,
         handleResetForm,
+        handleSubmit,
+        objSanggarList,
+        path,
         startFrom,
         toDestination,
-        handleSubmit,
-        handleChangeInput,
-        path,
         totalJarak,
-        bobot
     } = props
 
     return (
@@ -24,7 +25,7 @@ const SideNavigation = (props) => {
                     name='start_from'
                     label='Pilih titik awal'
                     placeholder='Pilih titik awal'
-                    objectValue={sanggarList}
+                    objectValue={objSanggarList}
                     value={startFrom}
                     onChange={(e) =>
                         handleChangeInput(START_FROM, e.target.value)
@@ -34,7 +35,7 @@ const SideNavigation = (props) => {
                     name='to_destination'
                     label='Pilih Tujuan'
                     placeholder='Pilih Tujuan'
-                    objectValue={sanggarList}
+                    objectValue={objSanggarList}
                     value={toDestination}
                     onChange={(e) =>
                         handleChangeInput(TO_DESTINATION, e.target.value)

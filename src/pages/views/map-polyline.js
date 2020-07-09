@@ -2,8 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react'
 import L from 'leaflet'
 import TextPath from 'react-leaflet-textpath'
 import { Marker, Polyline, Popup } from 'react-leaflet'
-import { mapDataList } from '../../constants'
-import { Routing, sortArray } from '../../components'
+import { sortArray } from '../../components'
 
 L.Icon.Default.imagePath = '../node_modules/leaflet'
 delete L.Icon.Default.prototype._getIconUrl
@@ -15,12 +14,12 @@ L.Icon.Default.mergeOptions({
 })
 
 const MapPolyline = (props) => {
-    const { path, isMapInit, map, isShowPolyline, bobot } = props
+    const { isShowPolyline, path, sanggarList } = props
     const [mappedPosition, setMappedPosition] = useState([])
 
     useEffect(() => {
         // Sort data by shortest path
-        const sorted = sortArray(mapDataList, path, 'verteks')
+        const sorted = sortArray(sanggarList, path, 'verteks')
         const filteredVerteks = sorted.filter((item) => {
             return path.includes(item.verteks)
         })
@@ -30,13 +29,12 @@ const MapPolyline = (props) => {
             parseFloat(item.lng)
         ])
 
-        localStorage.setItem('MAPPED', JSON.stringify(mappedPosition))
         setMappedPosition(mappedPosition)
     }, [path])
 
     return (
         <Fragment>
-            {mapDataList.map((item, index) => (
+            {sanggarList.map((item, index) => (
                 <Fragment key={index}>
                     <Marker
                         position={[parseFloat(item.lat), parseFloat(item.lng)]}
@@ -57,7 +55,6 @@ const MapPolyline = (props) => {
                     <Polyline weight={5} positions={[mappedPosition]} />
                 </Fragment>
             )}
-            {/* {isMapInit && <Routing map={map} />} */}
         </Fragment>
     )
 }

@@ -4,26 +4,24 @@ import { SideNavigation } from '../components'
 import {
     START_FROM,
     TO_DESTINATION,
-    MY_LOCATION,
     LABEL,
-    ADJACENCY_MATRIX
+    ADJACENCY_MATRIX,
+    API_URL
 } from '../constants'
 
 const Main = () => {
-    const defaultCurrentPosition = { lat: null, lng: null }
-    const geolocation = navigator.geolocation
     const [startFrom, setStartFrom] = useState(null)
     const [toDestination, setDestination] = useState(null)
     const [showPolyline, setShowPolyline] = useState(false)
     const [path, setPath] = useState([])
     const [bobot, setBobot] = useState([])
     const [totalJarak, setTotalJarak] = useState(null)
-    const [currentPosition, setCurrentPosition] = useState(defaultCurrentPosition)
+    const [objSanggarList, setObjSanggarList] = useState([])
+    const [sanggarList, setSanggarList] = useState([])
 
     const handleChangeInput = (type, value) => {
         switch (type) {
             case START_FROM:
-                if (value === MY_LOCATION) getUserLocation()
                 setStartFrom(value)
                 break
             case TO_DESTINATION:
@@ -95,42 +93,46 @@ const Main = () => {
         setShowPolyline(false)
         setStartFrom('')
         setDestination('')
-        setCurrentPosition(defaultCurrentPosition)
     }
 
     useEffect(() => {
-        if (geolocation) getUserLocation()
-    }, [geolocation])
+        fetch(API_URL, { method: 'GET' })
+            .then((res) => res.json())
+            .then((resp) => {
+                if (resp.length > 0) {
+                    let initial = []
 
-    const getUserLocation = () => {
-        // deteksi lokasi user
-        geolocation.getCurrentPosition((position) => {
-            setCurrentPosition((prevValue) => ({
-                ...prevValue,
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            }))
-        })
-    }
+                    resp.map((item, index) => {
+                        initial.push({
+                            text: item.name,
+                            value: index
+                        })
+                    })
+                    setObjSanggarList(initial)
+                }
+                setSanggarList(resp)
+            })
+            .catch((err) => console.log(err))
+    }, [])
 
     return (
         <Fragment>
             <SideNavigation
-                startFrom={startFrom}
-                toDestination={toDestination}
-                handleSubmit={handleSubmit}
+                bobot={bobot}
                 handleChangeInput={handleChangeInput}
                 handleResetForm={handleResetForm}
+                handleSubmit={handleSubmit}
+                objSanggarList={objSanggarList}
                 path={path}
+                startFrom={startFrom}
+                toDestination={toDestination}
                 totalJarak={totalJarak}
-                bobot={bobot}
             />
             <div className='content-container-body'>
                 <MapView
-                    currentPosition={currentPosition}
-                    showPolyline={showPolyline}
                     path={path}
-                    bobot={bobot}
+                    sanggarList={sanggarList}
+                    showPolyline={showPolyline}
                 />
             </div>
         </Fragment>
