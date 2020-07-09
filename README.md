@@ -6,6 +6,11 @@
 
 This project use OpenStreetMap (https://www.openstreetmap.org/) for maps, and use Leaflet (https://leafletjs.com/) for interactive maps which is contributed by OpenStreetMap itself.
 
+## Important!
+This project use API from ```https://github.com/ahmadf27/api-shortest-path-with-greedy-algorithm.git```.
+You must clone and run the API repository first before use this apps.
+Please Read README.md for detail about API.
+
 ## Requirement
 * Yarn (Recommended) or NPM
 * NodeJS
@@ -18,7 +23,3 @@ This project use OpenStreetMap (https://www.openstreetmap.org/) for maps, and us
 * Install all dependencies, open terminal/cmd then type ```yarn install``` or with NPM ```npm install```
 * Run apps ```yarn start``` or ```npm run start```
 * Open browser with url ```localhost:3000```
-
-## For Your Information
-* This project use dummy data and you can modify the it, located in ```src/constants/data-sanggar.js```
-* You can also modify the matrix data, located in ```src/constants/adjacency-matrix.js```
