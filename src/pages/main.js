@@ -7,7 +7,7 @@ import {
     MY_LOCATION,
     LABEL,
     ADJACENCY_MATRIX
-} from '../constants/index'
+} from '../constants'
 
 const Main = () => {
     const defaultCurrentPosition = { lat: null, lng: null }
@@ -80,14 +80,17 @@ const Main = () => {
             }
         }
 
-        setBobot(bobotArr)
-        setPath(result)
+        const joinResult = result.join('-')
+        const joinBobot = bobotArr.join('+')
+
+        setBobot(joinBobot)
+        setPath(joinResult)
         setTotalJarak(totalBobot)
         setShowPolyline(true)
     }
 
     const handleResetForm = () => {
-        setPath(null)
+        setPath([])
         setTotalJarak(null)
         setShowPolyline(false)
         setStartFrom('')
@@ -120,6 +123,7 @@ const Main = () => {
                 handleResetForm={handleResetForm}
                 path={path}
                 totalJarak={totalJarak}
+                bobot={bobot}
             />
             <div className='content-container-body'>
                 <MapView

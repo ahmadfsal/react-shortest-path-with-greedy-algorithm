@@ -1,4 +1,4 @@
-export function sortArray(array, order, key) {
+export const sortArray = (array, order, key) => {
     array.sort(function (a, b) {
         var A = a[key],
             B = b[key]

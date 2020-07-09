@@ -1,6 +1,6 @@
 import React, { memo, Fragment } from 'react'
-import { Button, Select } from '../components'
-import { START_FROM, TO_DESTINATION, sanggarList } from '../constants/index'
+import { Button, Select, Column, Columns } from '..'
+import { START_FROM, TO_DESTINATION, sanggarList } from '../../constants/index'
 
 const SideNavigation = (props) => {
     const {
@@ -10,7 +10,8 @@ const SideNavigation = (props) => {
         handleSubmit,
         handleChangeInput,
         path,
-        totalJarak
+        totalJarak,
+        bobot
     } = props
 
     return (
@@ -56,12 +57,27 @@ const SideNavigation = (props) => {
             </form>
             {path && totalJarak ? (
                 <Fragment>
-                    <div className='has-text-weight-medium is-margin-top'>
-                        Path: {path}
-                    </div>
-                    <div className='has-text-weight-medium is-margin-top'>
-                        Total Jarak: {totalJarak}km
-                    </div>
+                    <Columns>
+                        <Column>
+                            <div className='has-text-weight-medium'>
+                                Path: <br/>{path}
+                            </div>
+                        </Column>
+                    </Columns>
+                    <Columns>
+                        <Column>
+                            <div className='has-text-weight-medium'>
+                                Jarak: <br/>{bobot}
+                            </div>
+                        </Column>
+                    </Columns>
+                    <Columns>
+                        <Column>
+                            <div className='has-text-weight-medium'>
+                                Total Jarak: {totalJarak}km
+                            </div>
+                        </Column>
+                    </Columns>
                 </Fragment>
             ) : (
                 <div className='has-text-weight-medium is-margin-top'>
