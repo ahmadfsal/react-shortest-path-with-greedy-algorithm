@@ -1,6 +1,7 @@
 @import 'bulma';
 @import 'custom-variable';
 @import 'components/button';
+@import 'components/modal';
 @import 'components/input';
 @import 'components/navigation';
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
@@ -20,9 +21,11 @@ code {
 }
 
 .content-container-body {
-    display: flex;
+    // display: flex;
     min-width: 100vh;
     margin-left: $navigation-width;
+    // min-height: 100vh;
+    padding: 32px;
 }
 
 .map-view {
