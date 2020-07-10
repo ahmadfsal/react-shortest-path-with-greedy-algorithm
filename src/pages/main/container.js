@@ -51,9 +51,6 @@ const Main = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        console.log(LABEL)
-        console.log(ADJACENCY_MATRIX)
-
         let visited = []
         let result = []
         let bobotArr = []
@@ -70,7 +67,7 @@ const Main = () => {
         visited[verteksAsal] = true
         result.push(LABEL[verteksAsal])
 
-        while (verteksAsal !== indexVerteksAkhir) {
+        while (verteksAsal != indexVerteksAkhir) {
             let verteksTujuan = 1
             let MIN = Number.MAX_VALUE
 
@@ -85,7 +82,7 @@ const Main = () => {
                 }
             }
 
-            if (verteksTujuan !== -1) {
+            if (verteksTujuan != -1) {
                 visited[verteksTujuan] = true
                 result.push(LABEL[verteksTujuan])
 
