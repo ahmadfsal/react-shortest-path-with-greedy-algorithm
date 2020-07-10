@@ -1,4 +1,4 @@
-import React, { memo, Component } from 'react'
+import React, { memo } from 'react'
 import { Map, TileLayer } from 'react-leaflet'
 import MapPolyline from './map-polyline'
 
@@ -8,8 +8,8 @@ const MapView = (props) => {
     return (
         <Map
             center={[-6.7252, 108.5662]}
-            zoom={14}
-            style={{ height: '100vh', width: '100%' }}
+            zoom={13}
+            style={{ height: '80vh', width: '100%', marginTop: '3.5rem' }}
         >
             <TileLayer
                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

@@ -1,15 +1,14 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import L from 'leaflet'
-import TextPath from 'react-leaflet-textpath'
 import { Marker, Polyline, Popup } from 'react-leaflet'
-import { sortArray } from '../../components'
+import { sortArray } from '../../../components'
 
 L.Icon.Default.imagePath = '../node_modules/leaflet'
 delete L.Icon.Default.prototype._getIconUrl
 
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
+    iconRetinaUrl: require('../../../assets/images/sanggar.svg'),
+    iconUrl: require('../../../assets/images/sanggar.svg'),
     shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 })
 
@@ -30,30 +29,24 @@ const MapPolyline = (props) => {
         ])
 
         setMappedPosition(mappedPosition)
-    }, [path])
+    }, [path, sanggarList])
 
     return (
         <Fragment>
             {sanggarList.map((item, index) => (
-                <Fragment key={index}>
-                    <Marker
-                        position={[parseFloat(item.lat), parseFloat(item.lng)]}
-                    >
-                        <Popup>{`${item.name} (${item.verteks})`}</Popup>
-                    </Marker>
-                </Fragment>
+                <Marker
+                    key={index}
+                    position={[parseFloat(item.lat), parseFloat(item.lng)]}
+                >
+                    <Popup>
+                        {`(${item.verteks}) ${item.name}`}
+                        <br />
+                        {item.short_description}
+                    </Popup>
+                </Marker>
             ))}
             {isShowPolyline && (
-                <Fragment>
-                    {/* <TextPath
-                        positions={[mappedPosition]}
-                        text={'tes'}
-                        attributes={{
-                            'font-size': 20
-                        }}
-                    /> */}
-                    <Polyline weight={5} positions={[mappedPosition]} />
-                </Fragment>
+                <Polyline weight={5} positions={[mappedPosition]} />
             )}
         </Fragment>
     )

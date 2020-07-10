@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { memo } from 'react'
+import classnames from 'classnames'
 
-const Columns = ({ children }) => (
-    <div className="columns">
-        {children}
-    </div>
-)
+const Columns = ({ children, className }) => {
+    const classes = classnames('columns', className)
 
-export default Columns
+    return (
+        <div className={classes}>
+            {children}
+        </div>
+    )
+}
+
+export default memo(Columns)

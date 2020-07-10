@@ -1,15 +1,21 @@
 import React, { Fragment, memo, useState, useEffect } from 'react'
 import MapView from './views/map'
-import { SideNavigation } from '../components'
+import ModalLogin from './views/modal-login'
+import MapFilter from './views/map-filter'
+import { useHistory } from 'react-router-dom'
+import { Header } from 'components'
 import {
     START_FROM,
     TO_DESTINATION,
     LABEL,
     ADJACENCY_MATRIX,
+    USERNAME,
+    PASSWORD,
     API_URL
-} from '../constants'
+} from '../../constants'
 
 const Main = () => {
+    const history = useHistory()
     const [startFrom, setStartFrom] = useState(null)
     const [toDestination, setDestination] = useState(null)
     const [showPolyline, setShowPolyline] = useState(false)
@@ -18,6 +24,10 @@ const Main = () => {
     const [totalJarak, setTotalJarak] = useState(null)
     const [objSanggarList, setObjSanggarList] = useState([])
     const [sanggarList, setSanggarList] = useState([])
+    const [showModalLogin, setShowModalLogin] = useState(false)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     const handleChangeInput = (type, value) => {
         switch (type) {
@@ -27,6 +37,12 @@ const Main = () => {
             case TO_DESTINATION:
                 setDestination(value)
                 break
+            case USERNAME:
+                setUsername(value)
+                break
+            case PASSWORD:
+                setPassword(value)
+                break
             default:
                 break
         }
@@ -34,6 +50,9 @@ const Main = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        console.log(LABEL)
+        console.log(ADJACENCY_MATRIX)
 
         let visited = []
         let result = []
@@ -51,7 +70,7 @@ const Main = () => {
         visited[verteksAsal] = true
         result.push(LABEL[verteksAsal])
 
-        while (verteksAsal != indexVerteksAkhir) {
+        while (verteksAsal !== indexVerteksAkhir) {
             let verteksTujuan = 1
             let MIN = Number.MAX_VALUE
 
@@ -66,7 +85,7 @@ const Main = () => {
                 }
             }
 
-            if (verteksTujuan != -1) {
+            if (verteksTujuan !== -1) {
                 visited[verteksTujuan] = true
                 result.push(LABEL[verteksTujuan])
 
@@ -87,6 +106,19 @@ const Main = () => {
         setShowPolyline(true)
     }
 
+    const handleSubmitLogin = (e) => {
+        e.preventDefault()
+
+        if (username === '' && password === '') {
+            setErrorMessage('Username or Password cannot be empty')
+        } else {
+            localStorage.setItem('isLogin', true)
+            history.push('/admin')
+        }
+    }
+
+    const handleModalLogin = () => setShowModalLogin(!showModalLogin)
+
     const handleResetForm = () => {
         setPath([])
         setTotalJarak(null)
@@ -95,7 +127,7 @@ const Main = () => {
         setDestination('')
     }
 
-    useEffect(() => {
+    const fetchSanggarList = () => {
         fetch(API_URL, { method: 'GET' })
             .then((res) => res.json())
             .then((resp) => {
@@ -113,11 +145,20 @@ const Main = () => {
                 setSanggarList(resp)
             })
             .catch((err) => console.log(err))
+    }
+
+    useEffect(() => {
+        fetchSanggarList()
     }, [])
 
     return (
         <Fragment>
-            <SideNavigation
+            <Header
+                buttonTitle='Login'
+                title='Greedy Algorithm'
+                onClickButton={handleModalLogin}
+            />
+            <MapFilter
                 bobot={bobot}
                 handleChangeInput={handleChangeInput}
                 handleResetForm={handleResetForm}
@@ -135,6 +176,16 @@ const Main = () => {
                     showPolyline={showPolyline}
                 />
             </div>
+
+            <ModalLogin
+                errorMessage={errorMessage}
+                handleChangeInput={handleChangeInput}
+                handleModalLogin={handleModalLogin}
+                handleSubmitLogin={handleSubmitLogin}
+                isShow={showModalLogin}
+                password={password}
+                username={username}
+            />
         </Fragment>
     )
 }

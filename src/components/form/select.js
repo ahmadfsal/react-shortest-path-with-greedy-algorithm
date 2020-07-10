@@ -27,7 +27,7 @@ const Select = (props) => {
                         {objectValue.map((item, index) => {
                             return (
                                 <option key={index} value={item.value}>
-                                    {index+1}. {item.text}
+                                    {item.text}
                                 </option>
                             )
                         })}

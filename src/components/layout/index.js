@@ -1,2 +1,5 @@
 export { default as Columns } from './columns'
 export { default as Column } from './column'
+export { default as Modal } from './modal'
+export { default as Header } from './header'
+export { default as Table } from './table'
