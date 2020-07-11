@@ -2,18 +2,21 @@ import React, { Fragment, useState, useEffect } from 'react'
 import LeftMenu from './views/left-menu'
 import SanggarTable from './views/table'
 import ModalAddSanggar from './views/modal-add-sanggar'
+import ModalConfirmation from './views/modal-confirmation'
 import { Header, Button,  } from 'components'
-import { useHistory } from 'react-router-dom'
 import { API_URL } from '../../constants'
 
 const AdminPage = () => {
-    const history = useHistory()
     const [sanggarList, setSanggarList] = useState([])
     const [modalType, setModalType] = useState('ADD')
     const [sanggarDetail, setSanggarDetail] = useState({})
     const [showModalAddSanggar, setShowModalAddSanggar] = useState({
         isShow: '',
         sanggarId: ''
+    })
+    const [showModalConfirmation, setShowModalConfirmation] = useState({
+        isShow: false,
+        type: ''
     })
     const defaultFormData = {
         name: '',
@@ -46,8 +49,8 @@ const AdminPage = () => {
         setModalType(type)
     }
 
-    const handleDeleteSanggar = (sanggarId) => {
-        fetch(`${API_URL}/${sanggarId}`, {
+    const handleDeleteSanggar = () => {
+        fetch(`${API_URL}/${showModalAddSanggar.sanggarId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,6 +59,7 @@ const AdminPage = () => {
             .then((res) => res.json())
             .then((resp) => {
                 if (resp) {
+                    handleModalConfirmation()
                     alert('Successfully delete sanggar')
                     setShowModalAddSanggar(false)
                     fetchSanggar()
@@ -65,7 +69,6 @@ const AdminPage = () => {
     }
 
     const handleUpdateSanggar = (sanggarId) => {
-        console.log(sanggarDetail)
         fetch(`${API_URL}/${sanggarId}`, {
             method: 'PUT',
             body: JSON.stringify(sanggarDetail),
@@ -94,11 +97,19 @@ const AdminPage = () => {
                 handleUpdateSanggar(showModalAddSanggar.sanggarId)
                 break
             case 'DELETE':
-                handleDeleteSanggar(showModalAddSanggar.sanggarId)
+                handleModalConfirmation('DELETE')
                 break
             default:
                 break
         }
+    }
+
+    const handleModalConfirmation = (type) => {
+        setShowModalConfirmation(prevVal => ({
+            ...prevVal,
+            isShow: !prevVal.isShow,
+            type
+        }))
     }
 
     const handleAddSanggar = () => {
@@ -163,10 +174,7 @@ const AdminPage = () => {
             <Header
                 title='Welcome, Admin!'
                 buttonTitle='Logout'
-                onClickButton={() => {
-                    localStorage.setItem('isLogin', false)
-                    history.replace('/')
-                }}
+                onClickButton={() => {handleModalConfirmation('LOGOUT')}}
             />
             <LeftMenu />
             <div className='content-container-body'>
@@ -201,6 +209,12 @@ const AdminPage = () => {
                 handleChangeUpdate={handleChangeUpdate}
                 modalType={modalType}
                 sanggarDetail={sanggarDetail}
+            />
+
+            <ModalConfirmation
+                handleDeleteSanggar={handleDeleteSanggar}
+                handleModalConfirmation={handleModalConfirmation}
+                modalAttr={showModalConfirmation}
             />
         </Fragment>
     )

@@ -106,8 +106,12 @@ const Main = () => {
     const handleSubmitLogin = (e) => {
         e.preventDefault()
 
-        if (username === '' && password === '') {
-            setErrorMessage('Username or Password cannot be empty')
+        if (username === '') {
+            alert('Username or Password cannot be empty')
+        } else if (password === '') {
+            alert('Username or Password cannot be empty')
+        } else if (username !== 'admin' || password !== 'admin') {
+            alert('Incorrect Username or Password')
         } else {
             localStorage.setItem('isLogin', true)
             history.push('/admin')
@@ -133,7 +137,7 @@ const Main = () => {
 
                     resp.map((item, index) => {
                         initial.push({
-                            text: item.name,
+                            text: `${item.verteks}. ${item.name}`,
                             value: index
                         })
                     })
