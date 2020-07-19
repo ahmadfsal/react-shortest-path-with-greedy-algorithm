@@ -3,7 +3,7 @@ import { Map, TileLayer } from 'react-leaflet'
 import MapPolyline from './map-polyline'
 
 const MapView = (props) => {
-    const { path, sanggarList, showPolyline } = props
+    const { path, sanggarList, showPolyline, startingPointList } = props
 
     return (
         <Map
@@ -20,6 +20,7 @@ const MapView = (props) => {
                 isShowPolyline={showPolyline}
                 path={path}
                 sanggarList={sanggarList}
+                startingPointList={startingPointList}
             />
         </Map>
     )

@@ -5,13 +5,15 @@ import MapFilter from './views/map-filter'
 import { useHistory } from 'react-router-dom'
 import { Header } from 'components'
 import {
+    ADJACENCY_MATRIX,
+    ADJACENCY_MATRIX_START,
+    API_URL,
+    LABEL,
+    LABEL_STARTING_POINT,
+    PASSWORD,
     START_FROM,
     TO_DESTINATION,
-    LABEL,
-    ADJACENCY_MATRIX,
-    USERNAME,
-    PASSWORD,
-    API_URL
+    USERNAME
 } from '../../constants'
 
 const Main = () => {
@@ -23,11 +25,12 @@ const Main = () => {
     const [bobot, setBobot] = useState([])
     const [totalJarak, setTotalJarak] = useState(null)
     const [objSanggarList, setObjSanggarList] = useState([])
+    const [objStartFrom, setObjStartFrom] = useState([])
     const [sanggarList, setSanggarList] = useState([])
+    const [startingPointList, setStartingPointList] = useState([])
     const [showModalLogin, setShowModalLogin] = useState(false)
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
 
     const handleChangeInput = (type, value) => {
         switch (type) {
@@ -51,56 +54,62 @@ const Main = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        let visited = []
-        let result = []
-        let bobotArr = []
+        if (startFrom && toDestination) {
+            let visited = []
+            let result = []
 
-        for (let i = 0; i <= LABEL.length; i++) {
-            visited.push(false)
-        }
+            let verteksAsal = startFrom
+            let indexVerteksAkhir = toDestination
+            let totalBobot = 0
 
-        let indexVerteksAwal = startFrom
-        let indexVerteksAkhir = toDestination
-        let totalBobot = 0
-        let verteksAsal = indexVerteksAwal
+            const matrixStartingPoint = ADJACENCY_MATRIX_START[verteksAsal]
+            const mergeMatrix = [...ADJACENCY_MATRIX, matrixStartingPoint]
 
-        visited[verteksAsal] = true
-        result.push(LABEL[verteksAsal])
+            const labelStartingPoint = LABEL_STARTING_POINT[verteksAsal]
+            const mergeLabel = [...LABEL, labelStartingPoint]
 
-        while (verteksAsal != indexVerteksAkhir) {
-            let verteksTujuan = 1
-            let MIN = Number.MAX_VALUE
+            let findMatrixIndex = mergeMatrix.indexOf(matrixStartingPoint)
+            let findLabelIndex = mergeLabel.indexOf(labelStartingPoint)
 
-            for (let i = 0; i < ADJACENCY_MATRIX[verteksAsal].length; i++) {
-                let bobot = ADJACENCY_MATRIX[verteksAsal][i]
-                let isVisited = visited[i]
+            for (let i = 0; i <= mergeLabel.length; i++) {
+                visited.push(false)
+            }
 
-                if (bobot > 0 && !isVisited && bobot < MIN) {
-                    MIN = bobot
-                    bobotArr.push(bobot)
-                    verteksTujuan = i
+            visited[findMatrixIndex] = true
+            result.push(mergeLabel[findLabelIndex])
+
+            while (findMatrixIndex != indexVerteksAkhir) {
+                let verteksTujuan = 1
+                let MIN = Number.MAX_VALUE
+
+                for (let i = 0; i < mergeMatrix[findMatrixIndex].length; i++) {
+                    let bobot = mergeMatrix[findMatrixIndex][i]
+                    let isVisited = visited[i]
+
+                    if (bobot > 0 && !isVisited && bobot < MIN) {
+                        MIN = bobot
+                        verteksTujuan = i
+                    }
+                }
+
+                if (verteksTujuan != -1) {
+                    visited[verteksTujuan] = true
+                    result.push(mergeLabel[verteksTujuan])
+
+                    let bobot = mergeMatrix[findMatrixIndex][verteksTujuan]
+                    totalBobot += bobot
+                    findMatrixIndex = verteksTujuan
+                } else {
+                    break
                 }
             }
 
-            if (verteksTujuan != -1) {
-                visited[verteksTujuan] = true
-                result.push(LABEL[verteksTujuan])
+            const joinResult = result.join('-')
 
-                let bobot = ADJACENCY_MATRIX[verteksAsal][verteksTujuan]
-                totalBobot += bobot
-                verteksAsal = verteksTujuan
-            } else {
-                break
-            }
+            setPath(joinResult)
+            setTotalJarak(totalBobot)
+            setShowPolyline(true)
         }
-
-        const joinResult = result.join('-')
-        const joinBobot = bobotArr.join('+')
-
-        setBobot(joinBobot)
-        setPath(joinResult)
-        setTotalJarak(totalBobot)
-        setShowPolyline(true)
     }
 
     const handleSubmitLogin = (e) => {
@@ -129,27 +138,44 @@ const Main = () => {
     }
 
     const fetchSanggarList = () => {
-        fetch(API_URL, { method: 'GET' })
+        fetch(`${API_URL}/sanggars`, { method: 'GET' })
             .then((res) => res.json())
             .then((resp) => {
-                if (resp.length > 0) {
-                    let initial = []
-
-                    resp.map((item, index) => {
-                        initial.push({
-                            text: `${item.verteks}. ${item.name}`,
-                            value: index
-                        })
-                    })
-                    setObjSanggarList(initial)
-                }
                 setSanggarList(resp)
+                let initialSanggar = []
+
+                resp.map((item, index) => {
+                    initialSanggar.push({
+                        text: `${item.verteks}. ${item.name}`,
+                        value: index
+                    })
+                })
+                setObjSanggarList(initialSanggar)
+            })
+            .catch((err) => console.log(err))
+    }
+
+    const fetchStartingPoint = () => {
+        fetch(`${API_URL}/starting-point`, { method: 'GET' })
+            .then((res) => res.json())
+            .then((resp) => {
+                setStartingPointList(resp)
+                let initialStartFrom = []
+
+                resp.map((item, index) => {
+                    initialStartFrom.push({
+                        text: `${item.verteks}. ${item.name}`,
+                        value: index
+                    })
+                })
+                setObjStartFrom(initialStartFrom)
             })
             .catch((err) => console.log(err))
     }
 
     useEffect(() => {
         fetchSanggarList()
+        fetchStartingPoint()
     }, [])
 
     return (
@@ -160,11 +186,11 @@ const Main = () => {
                 onClickButton={handleModalLogin}
             />
             <MapFilter
-                bobot={bobot}
                 handleChangeInput={handleChangeInput}
                 handleResetForm={handleResetForm}
                 handleSubmit={handleSubmit}
                 objSanggarList={objSanggarList}
+                objStartFrom={objStartFrom}
                 path={path}
                 startFrom={startFrom}
                 toDestination={toDestination}
@@ -175,11 +201,11 @@ const Main = () => {
                     path={path}
                     sanggarList={sanggarList}
                     showPolyline={showPolyline}
+                    startingPointList={startingPointList}
                 />
             </div>
 
             <ModalLogin
-                errorMessage={errorMessage}
                 handleChangeInput={handleChangeInput}
                 handleModalLogin={handleModalLogin}
                 handleSubmitLogin={handleSubmitLogin}
