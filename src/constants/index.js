@@ -1,2 +1,2 @@
-export { ADJACENCY_MATRIX } from './adjacency-matrix'
-export { API_URL, PASSWORD, USERNAME, LABEL, START_FROM, TO_DESTINATION } from './general'
+export { ADJACENCY_MATRIX, ADJACENCY_MATRIX_START } from './adjacency-matrix'
+export { API_URL, PASSWORD, USERNAME, LABEL, LABEL_STARTING_POINT, START_FROM, TO_DESTINATION } from './general'

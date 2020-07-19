@@ -1,9 +1,14 @@
 import React from 'react'
-import { Modal, Button, Column, Columns } from 'components'
+import { Modal, Button } from 'components'
 import { useHistory } from 'react-router-dom'
 
 const ModalConfirmation = (props) => {
-    const { handleDeleteSanggar, handleModalConfirmation, modalAttr } = props
+    const {
+        handleDeleteSanggar,
+        handleDeleteStartingPoint,
+        handleModalConfirmation,
+        modalAttr
+    } = props
     const { isShow, type } = modalAttr
     const history = useHistory()
 
@@ -13,23 +18,33 @@ const ModalConfirmation = (props) => {
         } else if (type === 'LOGOUT') {
             localStorage.setItem('isLogin', false)
             history.replace('/')
+        } else if (type === 'DELETE_STARTING_POINT') {
+            handleDeleteStartingPoint()
         }
     }
 
     return (
         <Modal isShow={isShow} onClose={handleModalConfirmation}>
             <div className='has-text-weight-medium is-size-4'>Confirmation</div>
-            {type === 'DELETE' ? (
+
+            {type === 'DELETE' && (
                 <p className='is-margin-top-smaller'>
-                    Are you sure want to delete this item?
+                    Are you sure want to delete this sanggar?
                 </p>
-            ) : (
-                type === 'LOGOUT' && (
-                    <p className='is-margin-top is-margin-top-smaller'>
-                        Are you sure want to logout?
-                    </p>
-                )
             )}
+
+            {type === 'DELETE_STARTING_POINT' && (
+                <p className='is-margin-top-smaller'>
+                    Are you sure want to delete this starting point?
+                </p>
+            )}
+
+            {type === 'LOGOUT' && (
+                <p className='is-margin-top is-margin-top-smaller'>
+                    Are you sure want to logout?
+                </p>
+            )}
+
             <div className='buttons is-right is-margin-top'>
                 <Button
                     className='is-danger is-light'

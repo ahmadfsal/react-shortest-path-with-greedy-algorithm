@@ -4,11 +4,11 @@ import { START_FROM, TO_DESTINATION } from '../../../constants'
 
 const MapFilter = (props) => {
     const {
-        bobot,
         handleChangeInput,
         handleResetForm,
         handleSubmit,
         objSanggarList,
+        objStartFrom,
         path,
         startFrom,
         toDestination,
@@ -20,9 +20,9 @@ const MapFilter = (props) => {
             <form onSubmit={handleSubmit}>
                 <Select
                     name='start_from'
-                    label='Pilih titik awal'
-                    placeholder='Pilih titik awal'
-                    objectValue={objSanggarList}
+                    label='Starting Point'
+                    placeholder='Starting Point'
+                    objectValue={objStartFrom}
                     value={startFrom}
                     onChange={(e) => {
                         handleChangeInput(START_FROM, e.target.value)
@@ -30,8 +30,8 @@ const MapFilter = (props) => {
                 />
                 <Select
                     name='to_destination'
-                    label='Pilih Tujuan'
-                    placeholder='Pilih Tujuan'
+                    label='Destination'
+                    placeholder='Destination'
                     objectValue={objSanggarList}
                     value={toDestination}
                     onChange={(e) => {
@@ -49,7 +49,7 @@ const MapFilter = (props) => {
                         </Button>
                     </div>
                     <div className='column'>
-                        <Button type='submit'>Cari</Button>
+                        <Button type='submit'>Search</Button>
                     </div>
                 </div>
             </form>
@@ -59,29 +59,21 @@ const MapFilter = (props) => {
                         <Column>
                             <div className='has-text-weight-medium'>
                                 Path: <br />
-                                {path}
+                                <b>{path}</b>
                             </div>
                         </Column>
                     </Columns>
                     <Columns>
                         <Column>
                             <div className='has-text-weight-medium'>
-                                Jarak: <br />
-                                {bobot}
-                            </div>
-                        </Column>
-                    </Columns>
-                    <Columns>
-                        <Column>
-                            <div className='has-text-weight-medium'>
-                                Total Jarak: {totalJarak}km
+                                Total Distance: <b>{parseInt(totalJarak).toFixed(1)}KM</b>
                             </div>
                         </Column>
                     </Columns>
                 </Fragment>
             ) : (
                 <div className='has-text-weight-medium is-margin-top'>
-                    Tidak ada data.
+                    No data to be displayed.
                 </div>
             )}
         </SideNavigation>

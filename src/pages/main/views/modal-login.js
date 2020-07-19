@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
-import { Modal, Input, Button, Column, Columns } from '../../../components'
-import { USERNAME, PASSWORD } from '../../../constants/general'
+import { Modal, Input, Button, Column, Columns } from 'components'
+import { USERNAME, PASSWORD } from '../../../constants'
 
 const ModalLogin = (props) => {
     const {
